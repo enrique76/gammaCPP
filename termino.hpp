@@ -1,151 +1,58 @@
-#ifndef TERMINO
-#define TERMINO
+#ifndef VARIABLE
+#define VARIABLE
 
 #include<iostream>
-#include<string>
+#include<math.h>
+#include<stdio.h>
 
-using namespace std; // 
+using namespace std;
 
-class termino{
-	public:
-		double coeficiente;
-		string variable;
-		double exponente;
-		int pos;
-	public:
-		termino(double coeficiente,string variable,double exponente,int pos){
-			this->coeficiente = coeficiente;
-			this->variable = variable;
-			this->exponente = exponente;
-			this->pos = pos;
-		}
+class Variable{
+    private:
+        string variable;
+        double valor = NULL;
+    public:
+        // constructores
 
-		termino(){
-			this->coeficiente = 0;
-			this->variable = "x";
-			this->exponente = 1;
-			this->pos = 0;
-		}
+        Variable(string variable){
+            this->variable = variable;
+        }
 
-		termino(termino *t,int i){
-			this->coeficiente = t->coeficiente;
-			this->variable = t->variable;
-			this->exponente = t->exponente;
-			this->pos = i;
-		}
+        Variable(double valor){
+            this->valor = valor;
+        }
 
-		termino(termino *t){
-			this->coeficiente = t->coeficiente;
-			this->variable = t->variable;
-			this->exponente = t->exponente;
-			this->pos = t->pos;
-		}
+        Variable(string variable, double valor){
+            this->variable = variable;
+            this->valor = valor;
+        }
 
-		~termino(){
+        Variable(){
+            this->variable = "x";
+            this->valor = 1;
+        }
 
-		}
+        // dar valor 
 
-		void Imprimir(){
-			if(this->coeficiente != 0){
-				if(this->coeficiente > 0){
-					if(this->pos != 0){
-						cout<<" + "<<this->coeficiente;
-					}
-					else{
-						cout<<this->coeficiente;
-					}
-				}
-				else{
-					cout<<" "<<this->coeficiente;
-				}
+        void evaluar(double v){
+            this->valor = v;
+        }
 
-				if(this->exponente == 0){
-					// no se imprime nada
-				}
-				else if(this->exponente == 1){
-					cout<<this->variable;
-				}
-				else{
-					cout<<this->variable<<"^"<<this->exponente;
-				}
-			}
-		}
+        // getters 
 
-		void Imprimir_full(){
-			if(this->coeficiente != 0){
-				if(this->coeficiente > 0){
-					if(this->pos != 0){
-						cout<<" + "<<this->coeficiente;
-					}
-					else{
-						cout<<this->coeficiente;
-					}
-				}
-				else{
-					cout<<" "<<this->coeficiente;
-				}
+        string getVariable(){
+            return this->variable;
+        }
 
-				if(this->exponente == 0){
-					// no se imprime nada
-				}
-				else if(this->exponente == 1){
-					cout<<this->variable;
-				}
-				else{
-					cout<<this->variable<<"^"<<this->exponente;
-				}
-			}
+        double getValor(){
+            return this->valor;
+        }
 
-			cout<<", "<<this->pos;
-		}
+        // setters 
 
-		void operator = (termino *t){
-			this->coeficiente = t->coeficiente;
-			this->variable = t->variable;
-			this->exponente = t->exponente;
-			this->pos = t->pos;
-		}
-
-		termino * operator + (termino *b){
-			termino *t = new termino();
-
-			if((this->variable == b->variable)&&(this->exponente == b->exponente)){
-				t->variable = this->variable;
-				t->exponente = this->exponente;
-				t->coeficiente = this->coeficiente + b->coeficiente;
-				return t;
-			}
-			else{
-				return b;
-			}
-		}
-
-		termino * operator - (termino *b){
-			termino *t = new termino();
-
-			if((this->variable == b->variable)&&(this->exponente == b->exponente)){
-				t->variable = this->variable;
-				t->exponente = this->exponente;
-				t->coeficiente = this->coeficiente - b->coeficiente;
-				return t;
-			}
-			else{
-				return b;
-			}
-		}
-
-//		void SetData(string datos){
-//			string aux;
-//			
-//			for(int i=0;i<datos.find("^")-1;i++){
-//				aux<<datos[i];
-//			}
-//
-//			this->coeficiente = stod(aux);
-//			this->variable = datos.at(datos.find("^")-1);
-//			this->exponente = stod(datos.substr(datos.find("^"),datos.size()));
-//		}
+        void setVariable(string v){
+            this->variable = v;
+        }
 };
 
-#endif // TERMINO
-
+#endif // VARIABLE
