@@ -15,6 +15,7 @@ class Variable{
 		double exponente;
 		double valor = NULL;
 		int pos = 0;
+		string expresion = " ";
 	public:
 
 		// operadores 
@@ -72,36 +73,30 @@ class Variable{
 				f = f.substr(1,f.size()-1);
 			}
 
-			if(f.find(v+"^")){
-				this->coeficiente = stod(f.substr(0,f.find(v+"^")));
-				this->variable = v;
-				this->exponente = stod(f.substr(f.find("^")+1,f.size()-1));
-			}
-			else if(f.find("*"+v+"^")){
-				this->coeficiente = stod(f.substr(0,f.find("*"+v+"^")));
-				this->variable = v;
-				this->exponente = stod(f.substr(f.find("^")+1,f.size()-1));
-			}
-			else if(f.find("*"+v)){
-				this->coeficiente = stod(f.substr(0,f.find("*"+v)));
-				this->variable = v;
-				this->exponente = 1;
-			}
-			else if(f.find(v) > 0){
+			this->expresion = f;
+
+			if(f.find(v) > 0){
 				this->coeficiente = stod(f.substr(0,f.find(v)));
 				this->variable = v;
 				this->exponente = 1;
 			}
 			else if(f.find(v) == 0){
-				this->coeficiente = 1;
-				this->variable = v;
-				this->exponente = 1;
+				if(f.find(v+"^")){
+					this->coeficiente = stod(f.substr(0,f.find(v+"^")));
+					this->variable = v;
+					this->exponente = stod(f.substr(f.find("^")+1,f.size()-1));
+				}
+				else{
+					this->coeficiente = 1;
+					this->variable = v;
+					this->exponente = 1;
+				}
 			}
-			else if(stod(f)){
+			else{
 				this->coeficiente = stod(f);
 				this->variable = v;
 				this->exponente = 1;
-			}
+			}	
 		}
 		// destructor 
 
@@ -113,7 +108,12 @@ class Variable{
 
 		void Imprimir(){
 			if(this->coeficiente != 0){
-				if(this->coeficiente > 0){
+				if(this->coeficiente == 1){
+					if(this->pos != 0){
+						cout<<" + ";
+					}
+				}
+				else if(this->coeficiente > 0){
 					if(this->pos != 0){
 						cout<<" + "<<this->coeficiente;
 					}
@@ -221,6 +221,10 @@ class Variable{
 		
 		int getPos(){
 			return this->pos;
+		}
+		
+		string getExpresion(){
+			return this->expresion;
 		}
 		// operadores logicos por Variable =,==,!=,<,>,<=,>=
 
@@ -390,15 +394,168 @@ class Variable{
 		
 		// operadores logicos por String =,==,!=,<,>,<=,>=
 		
+		void operator = (string e){
+			Variable *v = new Variable(e,this->getVariable());
 
+			this->coeficiente = v->getCoeficiente();
+			this->exponente = v->getExponente();
+		}
 
-		// operadores aridmeticos por Variable +,-,*,/,^,**,%
+		bool operator == (string e) {
+			Variable *v = new Variable(e,this->getVariable());
+
+			if(e.find(v->getVariable())){
+				if((this->variable == v->getVariable()) && 
+					(this->exponente == v->getExponente()) && 
+					(this->coeficiente == v->getCoeficiente())){
+						return true;
+				}
+			}
+
+			return false;
+		}
 		
+		bool operator != (string e){
+			Variable *v = new Variable(e,this->getVariable());
 
-		// operadores aridmeticos por valor +,-,*,/,^,**,%
-		
-		
+			if(!e.find(v->getVariable())){
+				if((this->variable != v->getVariable()) && 
+					(this->exponente != v->getExponente()) && 
+					(this->coeficiente != v->getCoeficiente())){
+						return true;
+				}
+			}
 
+			return false;
+		}
+		
+		// operadores aridmeticos por Variable +,+=,-,-=,*,*=,/,/=,
+		
+		Variable * operator + (Variable *v){
+			if(this->variable == v->getVariable() && this->exponente == v->getExponente()){
+				Variable *e = new Variable();
+
+				e->setVariable(this->variable);
+				e->setExponente(this->exponente);
+				e->setCoeficiente(this->coeficiente + v->getCoeficiente());
+
+				return e;
+			} 
+
+			return v;
+		}
+
+		void operator += (Variable *v){
+			if(this->variable == v->getVariable() && this->exponente == v->getExponente()){
+				this->setCoeficiente(this->coeficiente + v->getCoeficiente());
+			} 
+		}
+
+		Variable * operator - (Variable *v){
+			if(this->variable == v->getVariable() && this->exponente == v->getExponente()){
+				Variable *e = new Variable();
+
+				e->setVariable(this->variable);
+				e->setExponente(this->exponente);
+				e->setCoeficiente(this->coeficiente - v->getCoeficiente());
+
+				return e;
+			} 
+
+			return v;
+		}
+
+		void operator -= (Variable *v){
+			if(this->variable == v->getVariable() && this->exponente == v->getExponente()){
+				this->setCoeficiente(this->coeficiente - v->getCoeficiente());
+			} 
+		}
+
+		Variable * operator * (Variable *v){
+			if(this->variable == v->getVariable()){
+				Variable *e = new Variable();
+
+				e->setVariable(this->variable);
+				e->setExponente(this->exponente + v->getExponente());
+				e->setCoeficiente(this->coeficiente * v->getCoeficiente());
+
+				return e;
+			}
+
+			return v;
+		}
+
+		void operator *= (Variable *v){
+			if(this->variable == v->getVariable() && this->exponente == v->getExponente()){
+				this->setCoeficiente(this->coeficiente * v->getCoeficiente());
+				this->setCoeficiente(this->getExponente() + v->getExponente());
+			} 
+		}
+
+		Variable * operator / (Variable *v){
+			if(this->variable == v->getVariable()){
+				Variable *e = new Variable();
+
+				e->setVariable(this->variable);
+				e->setExponente(this->exponente - v->getExponente());
+				e->setCoeficiente(this->coeficiente / v->getCoeficiente());
+
+				return e;
+			}
+
+			return v;
+		}
+		
+		void operator /= (Variable *v){
+			if(this->variable == v->getVariable() && this->exponente == v->getExponente()){
+				this->setCoeficiente(this->coeficiente / v->getCoeficiente());
+				this->setCoeficiente(this->getExponente() - v->getExponente());
+			} 
+		}
+		// operadores aridmeticos por valor *,*=,/,/=,^,^=,
+		
+		Variable * operator * (double v){
+			Variable *e = new Variable();
+
+			e->setVariable(this->variable);
+			e->setExponente(this->exponente);
+			e->setCoeficiente(this->coeficiente * v);
+
+			return e;
+		}
+
+		void operator *= (double v){
+			this->coeficiente *= v;
+		}
+	
+		Variable * operator / (double v){
+			Variable *e = new Variable();
+
+			e->setVariable(this->variable);
+			e->setExponente(this->exponente);
+			e->setCoeficiente(this->coeficiente / v);
+
+			return e;
+		}
+	
+		void operator /= (double v){
+			this->coeficiente /= v;
+		}
+	
+		Variable * operator ^ (double v){
+			Variable *e = new Variable();
+
+			e->setVariable(this->variable);
+			e->setExponente(this->exponente*v);
+			e->setCoeficiente(pow(this->coeficiente,v));
+
+			return e;
+		}
+	
+		void operator ^= (double v){
+			this->coeficiente = pow(this->coeficiente,v);
+			this->exponente *= v;
+		}
 	// evaluar   
 
 	double evaluar(double v){
@@ -406,15 +563,34 @@ class Variable{
 	}
 
 	// calculo   
-
+		// derivadas 
+	
 	Variable * diff(){
+		Variable *v = new Variable();  
 
+		v->setVariable(this->getVariable());  
+		v->setCoeficiente(this->getExponente()*this->getCoeficiente());
+		v->setExponente(this->getExponente()-1);
 	}
 
-	Variable * diff(string c){
+		// integrales 
+	Variable * Int(){
+		Variable *v = new Variable();
 
+		v->setCoeficiente(this->getCoeficiente()/(this->getExponente()+1));
+		v->setVariable(this->getVariable());
+		v->setExponente(this->getExponente()+1);
 	}
 
+	double Int(double li,double ls){
+		Variable *v = new Variable();
+
+		v->setCoeficiente(this->getCoeficiente()/(this->getExponente()+1));
+		v->setVariable(this->getVariable());
+		v->setExponente(this->getExponente()+1);
+
+		return ((v->evaluar(ls)) - (v->evaluar(li)));
+	}
 };
 
 #endif // Variable
