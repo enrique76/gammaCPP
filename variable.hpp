@@ -4,6 +4,7 @@
 #include<iostream>
 #include<string>
 #include<math.h>
+#include<conio.h>
 
 using namespace std; // 
 
@@ -66,6 +67,42 @@ class Variable{
 			}
 		}
 
+		Variable(string f,string v){
+			if(f.find("(") == 0 && f.find(")") ==  f.size()-1){
+				f = f.substr(1,f.size()-1);
+			}
+
+			if(f.find(v+"^")){
+				this->coeficiente = stod(f.substr(0,f.find(v+"^")));
+				this->variable = v;
+				this->exponente = stod(f.substr(f.find("^")+1,f.size()-1));
+			}
+			else if(f.find("*"+v+"^")){
+				this->coeficiente = stod(f.substr(0,f.find("*"+v+"^")));
+				this->variable = v;
+				this->exponente = stod(f.substr(f.find("^")+1,f.size()-1));
+			}
+			else if(f.find("*"+v)){
+				this->coeficiente = stod(f.substr(0,f.find("*"+v)));
+				this->variable = v;
+				this->exponente = 1;
+			}
+			else if(f.find(v) > 0){
+				this->coeficiente = stod(f.substr(0,f.find(v)));
+				this->variable = v;
+				this->exponente = 1;
+			}
+			else if(f.find(v) == 0){
+				this->coeficiente = 1;
+				this->variable = v;
+				this->exponente = 1;
+			}
+			else if(stod(f)){
+				this->coeficiente = stod(f);
+				this->variable = v;
+				this->exponente = 1;
+			}
+		}
 		// destructor 
 
 		~Variable(){
@@ -134,6 +171,13 @@ class Variable{
 			cout<<", "<<this->pos;
 		}
 
+		void Imprimir_ARG(){
+			cout<<"\nCoeficiente: "<<this->coeficiente;
+			cout<<"\nVariable: "<<this->variable;
+			cout<<"\nExponente: "<<this->exponente;
+			cout<<"\nValor: "<<this->valor;
+			cout<<"\nPos: "<<this->pos;
+		}
 		// setters 
 
 		void setVariable(string v){
@@ -344,6 +388,10 @@ class Variable{
 			return v;
 		}		
 		
+		// operadores logicos por String =,==,!=,<,>,<=,>=
+		
+
+
 		// operadores aridmeticos por Variable +,-,*,/,^,**,%
 		
 
@@ -355,6 +403,16 @@ class Variable{
 
 	double evaluar(double v){
 		return (this->coeficiente * pow(v,this->exponente));
+	}
+
+	// calculo   
+
+	Variable * diff(){
+
+	}
+
+	Variable * diff(string c){
+
 	}
 
 };

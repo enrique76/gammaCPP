@@ -10,14 +10,23 @@
 using namespace std;
 
 int main(){
+	system("cls");
 
-	Variable *v = new Variable(2,"x",2);
-	
+	string f; 
+	int li,ls;
 
-	cout<<"f("<<v->getVariable()<<") = "; v->Imprimir(); 
+	cout<<"Funcion: "; getline(cin,f);
+	cout<<"\nLimite inferior: "; cin>>li;
+	cout<<"\nLimite superior: "; cin>>ls;
 
-	for(int n=0;n<10;n++){
-		cout<<"\nf("<<n<<") = "<<v->evaluar(n);
+	Variable *v = new Variable(f,"x");
+
+	system("cls");
+	cout<<"\n\nFuncion: "; v->Imprimir();
+	v->Imprimir_ARG();
+
+	for(int i=li;i<ls;i++){
+		cout<<"\nF("<<i<<") = "<<v->evaluar(i);
 	}
 
 	return 0;
