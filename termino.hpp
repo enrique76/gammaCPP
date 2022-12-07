@@ -1,58 +1,56 @@
-#ifndef VARIABLE
-#define VARIABLE
+#ifndef TERMINO
+#define TERMINO
 
 #include<iostream>
 #include<math.h>
 #include<stdio.h>
+#include<vector>
+#include"variable.hpp"
 
 using namespace std;
 
-class Variable{
+class Termino{
     private:
-        string variable;
-        double valor = NULL;
+        vector<Variable *> termino;
+        double coeficiente;
     public:
         // constructores
+        Termino(string t,vector<string> v){
 
-        Variable(string variable){
-            this->variable = variable;
+            if(t.find("(") == 0 && t.find(")") ==  t.size()-1){
+				t = t.substr(1,t.size()-1);
+			}
+
+            int i;
+            string aux;
+            for(i=0;i<t.size();i++){
+                if(isdigit(t[i])){
+                    aux+=t[i];
+                }
+                else{
+                    break;
+                }
+            }
+            
+            this->coeficiente = stod(aux);
+            t = t.substr(i,t.size()-1);
+
+            vector<string> aux2;
+            aux.clear();
+
+            for(int j=0;j<t.size();j++){
+                for(int z=0;z<v.size();z++){
+                    if(string(1,t[i]) == v.at(z)){
+                        aux += t[i] + ",";
+                        z=v.size();
+                    }
+                }
+            }
+
+            cout<<aux;
         }
 
-        Variable(double valor){
-            this->valor = valor;
-        }
-
-        Variable(string variable, double valor){
-            this->variable = variable;
-            this->valor = valor;
-        }
-
-        Variable(){
-            this->variable = "x";
-            this->valor = 1;
-        }
-
-        // dar valor 
-
-        void evaluar(double v){
-            this->valor = v;
-        }
-
-        // getters 
-
-        string getVariable(){
-            return this->variable;
-        }
-
-        double getValor(){
-            return this->valor;
-        }
-
-        // setters 
-
-        void setVariable(string v){
-            this->variable = v;
-        }
+        
 };
 
-#endif // VARIABLE
+#endif //  TERMINO

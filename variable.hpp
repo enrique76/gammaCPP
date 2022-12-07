@@ -76,9 +76,26 @@ class Variable{
 			this->expresion = f;
 
 			if(f.find(v) > 0){
-				this->coeficiente = stod(f.substr(0,f.find(v)));
-				this->variable = v;
-				this->exponente = 1;
+				if(f.find("*"+v+"^")){
+					this->coeficiente = stod(f.substr(0,f.find("*"+v+"^")));
+					this->variable = v;
+					this->exponente = stod(f.substr(f.find("^")+1,f.size()-1));
+				}
+				else if(f.find("*"+v)){
+					this->coeficiente = stod(f.substr(0,f.find("*"+v)));
+					this->variable = v;
+					this->exponente = 1;
+				}
+				else if(f.find(v+"^")){
+					this->coeficiente = stod(f.substr(0,f.find(v+"^")));
+					this->variable = v;
+					this->exponente = stod(f.substr(f.find("^")+1,f.size()-1));
+				}
+				else{
+					this->coeficiente = stod(f.substr(0,f.find(v)));
+					this->variable = v;
+					this->exponente = 1;
+				}
 			}
 			else if(f.find(v) == 0){
 				if(f.find(v+"^")){
